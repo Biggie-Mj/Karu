@@ -4,12 +4,13 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#10251f"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="description" content="Le compagnon de Karu : combat, compétences, inventaire et journal de voyage.">
-<title>Karu — Grand-Père Coquille</title><link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./assets/app-icon.png"><link rel="apple-touch-icon" href="./assets/app-icon.png"><link rel="preload" href="./assets/backgrounds/01-accueil.webp" as="image"><link rel="stylesheet" href="./styles.css">
+<title>Karu — Grand-Père Coquille</title><link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./app-icon.png"><link rel="apple-touch-icon" href="./app-icon.png"><link rel="preload" href="./01-accueil.webp" as="image"><link rel="stylesheet" href="./styles.css?v=1.0.1">
 </head>
 <body data-view="home"><div class="scenery" aria-hidden="true"></div><div class="veil" aria-hidden="true"></div>
-<div id="app"><header id="header"></header><div id="storage-warning" role="alert"></div><main id="main"></main><nav id="dock" aria-label="Navigation principale"></nav></div>
+<div id="app"><header id="header"></header><div id="storage-warning" role="alert"></div><main id="main"><p id="startup-message" role="status">Chargement du compagnon de Karu…</p></main><nav id="dock" aria-label="Navigation principale"></nav></div>
 <dialog id="sheet" aria-labelledby="sheet-title"><header class="sheet-head"><div><span class="eyebrow" id="sheet-kicker">KARU · COMPAGNON</span><h2 id="sheet-title"></h2></div><button id="close-sheet" class="icon-button" aria-label="Fermer">×</button></header><div id="sheet-body"></div></dialog>
 <div id="toast" role="status" aria-live="polite"></div><input type="file" id="import-file" accept="application/json,.json" hidden>
 <noscript>Le compagnon nécessite JavaScript. Activez-le dans les réglages de votre navigateur.</noscript>
-<script type="module" src="./js/app.js"></script>
+<script type="module" src="./app.js?v=1.0.1"></script>
 </body></html>
+
