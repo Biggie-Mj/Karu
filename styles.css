@@ -31,7 +31,7 @@ body.contrast .veil{background:#071912d9}
 @keyframes dice-arrive{from{opacity:.3;transform:translateY(6px) rotate(-12deg)}to{opacity:1;transform:translateY(0) rotate(-4deg)}}
 .roll-result .die{animation:dice-arrive .28s ease-out both}.roll-result .die:nth-child(2){animation-delay:.07s}
 body[data-combat-fx]{--fx-color:#77ded2}body[data-combat-fx=damage]{--fx-color:#ed977e}body[data-combat-fx=heal],body[data-combat-fx=rest]{--fx-color:#9fe3aa}body[data-combat-fx=critical]{--fx-color:#efd28c}body[data-combat-fx=miss]{--fx-color:#aeb7b0}body[data-combat-fx=guard]{--fx-color:#85bee8}
-body[data-combat-fx] #toast{border-color:var(--fx-color);box-shadow:0 0 20px color-mix(in srgb,var(--fx-color) 35%,transparent),0 18px 70px #0007}
+
 body[data-combat-fx] .status{position:relative}
 body[data-combat-fx] .status:after{content:"";position:absolute;inset:-3px;border:1px solid var(--fx-color);border-radius:14px;box-shadow:0 0 14px color-mix(in srgb,var(--fx-color) 28%,transparent);pointer-events:none;animation:combat-pulse .75s ease-out both}
 body[data-combat-fx=damage] .status button:first-child,body[data-combat-fx=heal] .status button:first-child,body.ki-spent-fx .status button:last-child{animation:counter-pulse .75s ease-out}
@@ -45,3 +45,40 @@ body.reduce-motion .status:after{display:none}body.reduce-motion .roll-result .d
 
 body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{animation:none!important;transition:none!important}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* 1.0.3: broad light outside the surfaces, with a calm dark reading area. */
+.ki-dots .ki-charge{overflow:visible}
+.ki-dots .ki-charge:before{inset:-12px -10px;border-radius:50%;background:radial-gradient(ellipse,rgba(123,255,230,.6) 0%,rgba(58,225,204,.35) 25%,rgba(39,177,218,.14) 50%,transparent 75%);filter:blur(7px);opacity:.7}
+.ki-dots .ki-charge.on:before{animation:wide-ki-glow 3.8s ease-in-out infinite;animation-delay:var(--aura-delay,0s)}
+.ki-dots .ki-charge .icon{filter:drop-shadow(0 0 5px #63ffe2aa);position:relative}
+.ki-dots .ki-charge.spent:before{background:none;opacity:0}
+.ki-dots .ki-charge.spent .icon{filter:grayscale(1);opacity:.25}
+.inventory{gap:15px 12px;padding:12px 2px;isolation:isolate}
+.item-tile.magical{overflow:visible;background:rgba(10,31,25,.78);border-color:rgba(144,226,204,.5);box-shadow:none}
+.item-tile.magical:before{content:"";position:absolute;inset:2px;border-radius:inherit;background:transparent;box-shadow:0 0 22px 7px rgba(59,224,197,.36),0 0 44px 12px rgba(36,168,211,.22);filter:blur(6px);opacity:.8;z-index:-1;pointer-events:none;animation:wide-item-glow 4.8s ease-in-out infinite}
+.item-tile.magical:after{inset:0;border:1px solid rgba(169,255,227,.45);box-shadow:none;opacity:.55;animation:none}
+.item-tile.magical:nth-child(3n+2):before{animation-delay:-1.6s}.item-tile.magical:nth-child(3n):before{animation-delay:-3.2s}
+.item-tile.magical b,.item-tile.magical small{position:relative;z-index:1;text-shadow:0 1px 3px #04130ee6}
+body.contrast .item-tile.magical{background:rgba(7,22,17,.97)}
+@keyframes wide-ki-glow{0%,100%{opacity:.5;transform:scale(.88)}50%{opacity:.95;transform:scale(1.15)}}
+@keyframes wide-item-glow{0%,100%{opacity:.4;transform:scale(.97)}50%{opacity:.92;transform:scale(1.025)}}
+/* Manual popover places the notice above open detail dialogs too. */
+#toast{--notice-rgb:110,215,190;position:fixed;inset:auto;left:50%;top:45%;margin:0;transform:translate(-50%,-50%);width:min(86vw,400px);max-height:70dvh;overflow:visible;isolation:isolate;box-sizing:border-box;z-index:1000;padding:24px 25px;border-radius:20px;border:1px solid #c5a263;background:linear-gradient(145deg,rgba(24,49,39,.95),rgba(10,29,23,.97));color:#fff1d5;font-size:16px;line-height:1.65;text-align:center;text-shadow:0 1px 2px #0009;box-shadow:0 20px 55px #0006;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .18s ease}
+#toast.show{opacity:1;pointer-events:auto;cursor:pointer}
+#toast:before{content:"";position:absolute;inset:0;border-radius:inherit;z-index:-1;pointer-events:none;background:transparent;box-shadow:0 0 44px 16px rgba(var(--notice-rgb),.45),0 0 85px 32px rgba(var(--notice-rgb),.23);filter:blur(15px);opacity:.85}
+#toast:after{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:2px;pointer-events:none;background:linear-gradient(115deg,#735426,#d9b666 22%,#fff0b3 35%,#ac8544 45%,#fce2a0 62%,#997038 78%,#735426);background-size:300% 100%;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask-composite:exclude}
+#toast.show:after{animation:notice-gold 3s ease-in-out infinite}
+#toast.show:before{animation:notice-glow 3.5s ease-in-out infinite}
+#toast[data-notice-kind=damage]{--notice-rgb:239,105,77}
+#toast[data-notice-kind=heal],#toast[data-notice-kind=rest]{--notice-rgb:112,231,153}
+#toast[data-notice-kind=critical],#toast[data-notice-kind=attack]{--notice-rgb:245,191,83}
+#toast[data-notice-kind=guard]{--notice-rgb:100,179,246}
+#toast[data-notice-kind=ki],#toast[data-notice-kind=turn]{--notice-rgb:65,231,210}
+#toast[data-notice-kind=move]{--notice-rgb:121,206,239}
+#toast[data-notice-kind=miss]{--notice-rgb:163,179,191}
+@keyframes notice-gold{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes notice-glow{0%,100%{opacity:.65}50%{opacity:1}}
+@media(max-width:350px){#toast{padding:21px 18px;font-size:15px}.inventory{gap:13px 9px}}
+body.reduce-motion .ki-charge:before,body.reduce-motion .item-tile.magical:before{animation:none!important;opacity:.6}
+body.reduce-motion #toast:before,body.reduce-motion #toast:after{animation:none!important}
+@media(prefers-reduced-motion:reduce){.ki-dots .ki-charge:before,.item-tile.magical:before,#toast:before,#toast:after{animation:none!important}.ki-dots .ki-charge.on:before,.item-tile.magical:before{opacity:.6}}

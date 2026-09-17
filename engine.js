@@ -50,7 +50,10 @@ function validateAttack(s,id,source){const a=attackStats(s,id);able(s,source!=='
  else if(source==='return'){require(s.returnReady,'Aucun projectile attrapé prêt à être renvoyé.');require(s.resources.ki>=s.character.rules.returnCost,'Ki insuffisant.');}
  else throw new Error('Source d’attaque inconnue.');
 }
-export function apply(state,event,rng){const s=clone(state),r=s.resources,c=s.character,t=s.turn;let message='';const rules=c.rules;
+const TURN_FIELDS=['resources','turn','shell','conditions','effects','lastHit','returnReady','items','coins'];
+export const turnSnapshot=s=>Object.fromEntries(TURN_FIELDS.map(k=>[k,clone(s[k])]));
+export function apply(state,event,rng){const s=clone(state);let r=s.resources;const c=s.character,t=s.turn;let message='';const rules=c.rules;
+ if(!s.turnCheckpoint&&t.phase==='active'&&event.type!=='cancelTurn')s.turnCheckpoint=turnSnapshot(s);
  switch(event.type){
  case 'attack':{
   validateAttack(s,event.id,event.source);const a=attackStats(s,event.id),source=event.source;
@@ -106,6 +109,21 @@ export function apply(state,event,rng){const s=clone(state),r=s.resources,c=s.ch
   else {require(r.hp>0,'Repos long : au moins 1 PV au début du repos.');r.hp=derived(s).maxHp;r.tempHp=0;r.hd=Math.min(c.hitDice,r.hd+Math.max(1,Math.floor(c.hitDice/2)));r.whole=true;if(event.food&&r.exhaustion>0)r.exhaustion--;r.hp=derived(s).maxHp;extra='PV restaurés ; moitié des dés de vie récupérée ; intégrité physique rechargée.';}
   if(event.meditation)r.ki=c.maxKi;r.belt=true;s.lastHit=null;s.returnReady=false;s.turn={...initial().turn,number:t.number,phase:'waiting'};s.effects=s.effects.filter(e=>e.boundary==='manual');message=`Repos ${event.kind==='short'?'court':'long'} terminé. ${extra} ${event.meditation?'Ki récupéré après méditation.':'Ki inchangé : pas de méditation.'}`;break;
  }
+ case 'deleteItem':{
+  const item=s.items.find(i=>i.id===event.id);require(item,'Objet introuvable.');
+  s.items=s.items.filter(i=>i.id!==event.id);message=`${item.name} supprimé de l’inventaire. Ses bonus et son harmonisation sont retirés. Annuler permet de le restaurer.`;break;
+ }
+ case 'cancelTurn':{
+  require(t.phase==='active'&&s.turnCheckpoint,'Aucun début de tour enregistré. Commencez le prochain tour pour activer cette commande.');
+  const checkpoint=s.turnCheckpoint;
+  for(const k of TURN_FIELDS)s[k]=clone(checkpoint[k]);
+  r=s.resources;r.hp=Math.min(r.hp,derived(s).maxHp);r.ki=Math.min(r.ki,c.maxKi);r.hd=Math.min(r.hd,c.hitDice);
+  message=`Tour ${s.turn.number} annulé : retour à son état initial. Journal personnel conservé.`;break;
+ }
+ case 'resetEncounter':{
+  s.turn=clone(initial().turn);s.effects=s.effects.filter(e=>e.boundary==='manual');s.lastHit=null;s.returnReady=false;
+  message='Rencontre réinitialisée : tour 1, actions et déplacement remis à zéro, effets à échéance retirés. PV, ki, usages par repos, états et inventaire conservés.';break;
+ }
  case 'item':{
   const idx=s.items.findIndex(x=>x.id===event.item.id);const it=clone(event.item);integer(it.quantity,0,9999);require(it.name.trim(),'Nom requis.');if(it.attuned){require(it.requiresAttunement,'Cet objet ne requiert pas d’harmonisation.');require(s.items.filter(x=>x.id!==it.id&&x.attuned&&x.quantity>0).length<3,'Trois harmonisations maximum.');}
   if(idx<0)s.items.push(it);else s.items[idx]=it;r.hp=Math.min(r.hp,derived(s).maxHp);message=`Inventaire · ${it.name} enregistré.`;break;
@@ -126,10 +144,11 @@ export function apply(state,event,rng){const s=clone(state),r=s.resources,c=s.ch
  if(!['attack','stun','open','roll'].includes(event.type))s.lastHit=null;
  if(!['deflect','roll'].includes(event.type))s.returnReady=false;
  if(derived(s).speed===0||incapacitated(s))s.effects=s.effects.filter(e=>e.kind!=='dodge');
+ if(['startTurn','resetEncounter'].includes(event.type))s.turnCheckpoint=turnSnapshot(s);
  r.hp=Math.min(r.hp,derived(s).maxHp);s.updatedAt=new Date().toISOString();s.log.unshift({id:crypto.randomUUID(),at:s.updatedAt,turn:s.turn.number,message});s.log=s.log.slice(0,300);validateState(s);return {state:s,message};
 }
 export function validateCharacter(c){require(c&&typeof c==='object','Personnage manquant.');require(typeof c.name==='string'&&c.name.length>0&&c.name.length<100,'Nom invalide.');integer(c.level,1,20);for(const k of Object.keys(ATTRS))integer(c.stats?.[k],1,30);integer(c.proficiency,0,10);integer(c.maxHp,1,10000);integer(c.maxKi,0,100);integer(c.hitDice,1,30);integer(c.hitDie,2,20);integer(c.martialDie,2,20);number(c.naturalAc,0,100);number(c.baseSpeed,0,100);number(c.monkSpeed,0,100);for(const k of ['attackAdjustment','damageAdjustment','acAdjustment','dcAdjustment'])number(c[k],-100,100);for(const k of Object.keys(ATTRS)){number(c.saves[k],0,2);number(c.saveAdjustments[k]||0,-100,100);}for(const [id]of SKILLS){number(c.skills?.[id]?.proficiency,0,2);number(c.skills[id].adjustment,-100,100);}for(const k of ['shellBonus','flurryCost','patientCost','windCost','stunCost','returnCost','wholeMultiplier','fallMultiplier'])number(c.rules[k],0,100);for(const k of ['armor','shield','encumbered','slippery'])require(typeof c[k]==='boolean','Option de fiche invalide.');}
-export function validateState(s){require(s?.schema===VERSION,'Version de sauvegarde incompatible.');validateCharacter(s.character);const r=s.resources;for(const k of ['hp','tempHp','ki','hd','success','failure','exhaustion'])integer(r?.[k],0,k==='success'||k==='failure'?3:k==='exhaustion'?6:100000);require(r.hp<=derived(s).maxHp&&r.ki<=s.character.maxKi&&r.hd<=s.character.hitDice,'Ressources supérieures à leur maximum.');for(const k of ['whole','belt','gourd','stable','dead'])require(typeof r[k]==='boolean','Ressource booléenne invalide.');
+export function validateState(s){if(s?.turnCheckpoint){require(typeof s.turnCheckpoint==='object'&&!s.turnCheckpoint.turnCheckpoint,'Point de reprise invalide.');const probe={...s,turnCheckpoint:null};for(const k of TURN_FIELDS){require(Object.hasOwn(s.turnCheckpoint,k),'Point de reprise incomplet.');probe[k]=s.turnCheckpoint[k];}probe.resources=clone(probe.resources);probe.resources.hp=Math.min(probe.resources.hp,derived(probe).maxHp);probe.resources.ki=Math.min(probe.resources.ki,probe.character.maxKi);probe.resources.hd=Math.min(probe.resources.hd,probe.character.hitDice);validateState(probe);}require(s?.schema===VERSION,'Version de sauvegarde incompatible.');validateCharacter(s.character);const r=s.resources;for(const k of ['hp','tempHp','ki','hd','success','failure','exhaustion'])integer(r?.[k],0,k==='success'||k==='failure'?3:k==='exhaustion'?6:100000);require(r.hp<=derived(s).maxHp&&r.ki<=s.character.maxKi&&r.hd<=s.character.hitDice,'Ressources supérieures à leur maximum.');for(const k of ['whole','belt','gourd','stable','dead'])require(typeof r[k]==='boolean','Ressource booléenne invalide.');
  require(Array.isArray(s.items)&&s.items.length<=1000,'Inventaire invalide.');for(const i of s.items){require(typeof i.id==='string'&&typeof i.name==='string'&&typeof i.description==='string','Objet invalide.');integer(i.quantity,0,9999);for(const k of ['equipped','attuned','requiresAttunement'])require(typeof i[k]==='boolean','Équipement invalide.');if(i.bonus!==undefined)number(i.bonus,-100,100);}
  require(new Set(s.items.map(i=>i.id)).size===s.items.length,'Identifiants d’objets dupliqués.');require(s.items.filter(i=>i.attuned&&i.quantity>0).length<=3,'Trop d’harmonisations.');
  require(s.turn&&['active','waiting'].includes(s.turn.phase),'Tour invalide.');integer(s.turn.number,1,100000);for(const k of ['action','bonus','reaction','attackTaken','martialQualified','flurryWindow'])require(typeof s.turn[k]==='boolean','Économie de tour invalide.');for(const k of ['attacksLeft','flurryLeft'])integer(s.turn[k],0,2);number(s.turn.moveSpent);integer(s.turn.dashes,0,20);
@@ -145,3 +164,4 @@ export function validateState(s){require(s?.schema===VERSION,'Version de sauvega
 }
 export function importData(text){require(text.length<6000000,'Fichier trop volumineux (6 Mo maximum).');const raw=JSON.parse(text);const state=raw.app==='karu-compagnon'?raw.state:raw;validateState(state);return clone(state);}
 export const exportData=s=>JSON.stringify({app:'karu-compagnon',version:VERSION,exportedAt:new Date().toISOString(),state:s},null,2);
+

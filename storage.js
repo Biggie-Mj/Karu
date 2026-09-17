@@ -1,10 +1,12 @@
 import {initial} from './data.js';
-import {apply,clone,validateState,exportData,importData} from './engine.js';
+import {apply,clone,turnSnapshot,validateState,exportData,importData} from './engine.js';
 export const KEY='karu-compagnon-v1:'+location.pathname.replace(/index\.html$/,'');
 const BACKUP=KEY+':backup';
 let state=initial(),undo=[],warning='',blocked=false;
 const transactions=new Set();
 try{const text=localStorage.getItem(KEY);if(text)state=importData(text);}catch(e){warning='La sauvegarde locale est illisible. Elle est conservée : exportez-la avant de la remplacer dans Réglages.';blocked=true;}
+// A legacy save has no historic turn start; begin tracking from this opening.
+if(!state.turnCheckpoint&&state.turn.phase==='active')state.turnCheckpoint=turnSnapshot(state);
 export const getState=()=>state;
 export const canUndo=()=>undo.length>0;
 export const getWarning=()=>warning;
@@ -16,3 +18,4 @@ export function updateContent(mutator){const next=clone(state);mutator(next);val
 export function replaceState(next){validateState(next);try{localStorage.setItem(BACKUP,localStorage.getItem(KEY)||exportData(state));}catch{throw new Error('Impossible de conserver la sauvegarde précédente. Exportez-la avant le remplacement.');}state=clone(next);blocked=false;undo=[];transactions.clear();persist();}
 export function restoreBackup(){const raw=localStorage.getItem(BACKUP);if(!raw)throw new Error('Aucune sauvegarde précédente.');replaceState(importData(raw));}
 export const rawSave=()=>localStorage.getItem(KEY)||exportData(state);
+
