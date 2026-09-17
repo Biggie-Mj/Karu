@@ -47,12 +47,12 @@ body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{an
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 
 /* 1.0.3: broad light outside the surfaces, with a calm dark reading area. */
-.ki-dots .ki-charge{overflow:visible}
-.ki-dots .ki-charge:before{inset:-12px -10px;border-radius:50%;background:radial-gradient(ellipse,rgba(123,255,230,.6) 0%,rgba(58,225,204,.35) 25%,rgba(39,177,218,.14) 50%,transparent 75%);filter:blur(7px);opacity:.7}
-.ki-dots .ki-charge.on:before{animation:wide-ki-glow 3.8s ease-in-out infinite;animation-delay:var(--aura-delay,0s)}
-.ki-dots .ki-charge .icon{filter:drop-shadow(0 0 5px #63ffe2aa);position:relative}
-.ki-dots .ki-charge.spent:before{background:none;opacity:0}
-.ki-dots .ki-charge.spent .icon{filter:grayscale(1);opacity:.25}
+.ki-dots .ki-charge{overflow:visible;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;outline:0!important}
+/* The KI glow is generated from the transparent PNG itself. No rectangular aura surface remains. */
+.ki-dots .ki-charge:before{content:none!important;display:none!important;background:none!important;box-shadow:none!important;filter:none!important}
+.ki-dots .ki-charge .icon{position:relative;filter:none}
+.ki-dots .ki-charge.on .icon{filter:drop-shadow(0 0 4px rgba(123,255,230,.95)) drop-shadow(0 0 10px rgba(58,225,204,.62)) drop-shadow(0 0 18px rgba(39,177,218,.34));animation:ki-icon-glow 3.8s ease-in-out infinite;animation-delay:var(--aura-delay,0s)}
+.ki-dots .ki-charge.spent .icon{filter:grayscale(1);opacity:.25;animation:none}
 .inventory{gap:15px 12px;padding:12px 2px;isolation:isolate}
 .item-tile.magical{overflow:visible;background:rgba(10,31,25,.78);border-color:rgba(144,226,204,.5);box-shadow:none}
 .item-tile.magical:before{content:"";position:absolute;inset:2px;border-radius:inherit;background:transparent;box-shadow:0 0 22px 7px rgba(59,224,197,.36),0 0 44px 12px rgba(36,168,211,.22);filter:blur(6px);opacity:.8;z-index:-1;pointer-events:none;animation:wide-item-glow 4.8s ease-in-out infinite}
@@ -60,7 +60,7 @@ body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{an
 .item-tile.magical:nth-child(3n+2):before{animation-delay:-1.6s}.item-tile.magical:nth-child(3n):before{animation-delay:-3.2s}
 .item-tile.magical b,.item-tile.magical small{position:relative;z-index:1;text-shadow:0 1px 3px #04130ee6}
 body.contrast .item-tile.magical{background:rgba(7,22,17,.97)}
-@keyframes wide-ki-glow{0%,100%{opacity:.5;transform:scale(.88)}50%{opacity:.95;transform:scale(1.15)}}
+@keyframes ki-icon-glow{0%,100%{filter:drop-shadow(0 0 3px rgba(123,255,230,.72)) drop-shadow(0 0 8px rgba(58,225,204,.42)) drop-shadow(0 0 15px rgba(39,177,218,.24))}50%{filter:drop-shadow(0 0 5px rgba(123,255,230,1)) drop-shadow(0 0 13px rgba(58,225,204,.72)) drop-shadow(0 0 23px rgba(39,177,218,.4))}}
 @keyframes wide-item-glow{0%,100%{opacity:.4;transform:scale(.97)}50%{opacity:.92;transform:scale(1.025)}}
 /* Manual popover places the notice above open detail dialogs too. */
 #toast{--notice-rgb:110,215,190;position:fixed;inset:auto;left:50%;top:45%;margin:0;transform:translate(-50%,-50%);width:min(86vw,400px);max-height:70dvh;overflow:visible;isolation:isolate;box-sizing:border-box;z-index:1000;padding:24px 25px;border-radius:20px;border:1px solid #c5a263;background:linear-gradient(145deg,rgba(24,49,39,.95),rgba(10,29,23,.97));color:#fff1d5;font-size:16px;line-height:1.65;text-align:center;text-shadow:0 1px 2px #0009;box-shadow:0 20px 55px #0006;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .18s ease}
@@ -79,6 +79,6 @@ body.contrast .item-tile.magical{background:rgba(7,22,17,.97)}
 @keyframes notice-gold{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
 @keyframes notice-glow{0%,100%{opacity:.65}50%{opacity:1}}
 @media(max-width:350px){#toast{padding:21px 18px;font-size:15px}.inventory{gap:13px 9px}}
-body.reduce-motion .ki-charge:before,body.reduce-motion .item-tile.magical:before{animation:none!important;opacity:.6}
+body.reduce-motion .ki-charge:before,body.reduce-motion .item-tile.magical:before{animation:none!important}body.reduce-motion .ki-charge.on .icon{animation:none!important;filter:drop-shadow(0 0 4px rgba(123,255,230,.9)) drop-shadow(0 0 10px rgba(58,225,204,.55)) drop-shadow(0 0 18px rgba(39,177,218,.3))}
 body.reduce-motion #toast:before,body.reduce-motion #toast:after{animation:none!important}
-@media(prefers-reduced-motion:reduce){.ki-dots .ki-charge:before,.item-tile.magical:before,#toast:before,#toast:after{animation:none!important}.ki-dots .ki-charge.on:before,.item-tile.magical:before{opacity:.6}}
+@media(prefers-reduced-motion:reduce){.ki-dots .ki-charge:before,.item-tile.magical:before,#toast:before,#toast:after{animation:none!important}.ki-dots .ki-charge.on .icon{animation:none!important;filter:drop-shadow(0 0 4px rgba(123,255,230,.9)) drop-shadow(0 0 10px rgba(58,225,204,.55)) drop-shadow(0 0 18px rgba(39,177,218,.3))}.item-tile.magical:before{opacity:.6}}
