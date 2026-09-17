@@ -11,3 +11,37 @@ body[data-view=home] #header{background:#0b2119cc}
 body.contrast .veil{background:#071912d9}
 @media(min-width:700px){body:not([data-view=home]) .veil{background:linear-gradient(90deg,#081812b3,#081812d1 70%)}}
 
+
+/* 1.0.2 — jade/blue magical light, animated through opacity and transform. */
+.ki-dots{gap:3px;flex:1;min-width:0}.ki-row{gap:6px}
+.ki-dots .ki-charge{position:relative;isolation:isolate;display:grid;place-items:center;flex:0 0 25px;width:25px;height:30px;border:0;border-radius:0;background:none;box-shadow:none}
+.ki-dots .ki-charge .icon{width:25px;height:25px;z-index:1;filter:drop-shadow(0 0 3px #72eadb88)}
+.ki-dots .ki-charge:before{content:"";position:absolute;inset:0 -2px;background:radial-gradient(ellipse,#75fff4a6 0%,#2dc4bf66 32%,#269fdb33 52%,transparent 72%);opacity:.45;z-index:0;pointer-events:none}
+.ki-dots .ki-charge.on:before{animation:ki-breath 3.4s ease-in-out infinite;animation-delay:var(--aura-delay,0s)}
+.ki-dots .ki-charge.spent .icon{opacity:.25;filter:grayscale(1)}
+.ki-dots .ki-charge.spent:before{opacity:.08}
+.ki-dots .ki-charge.spent:after{content:"";position:absolute;width:18px;height:1px;background:#d0c9b7;transform:rotate(-40deg);z-index:2;opacity:.7}
+.item-tile.magical{isolation:isolate;border-color:#60ccc6;box-shadow:0 0 7px #35ceba22}
+.item-tile.magical:after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;border:1px solid #9bfff2;box-shadow:inset 0 0 12px #34bca42a,0 0 10px #37bcd666;opacity:.25;animation:magic-breath 4.2s ease-in-out infinite}
+.item-tile.magical:nth-child(3n+2):after{animation-delay:-1.4s}.item-tile.magical:nth-child(3n):after{animation-delay:-2.8s}
+@keyframes ki-breath{0%,100%{opacity:.3;transform:scale(.85)}50%{opacity:.8;transform:scale(1.17)}}
+@keyframes magic-breath{0%,100%{opacity:.22}50%{opacity:.75}}
+@keyframes combat-pulse{0%{opacity:0;transform:scale(.985)}30%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.015)}}
+@keyframes counter-pulse{0%,100%{box-shadow:inset 0 0 0 transparent}35%{box-shadow:inset 0 0 22px var(--fx-color,#75e9d4)}}
+@keyframes dice-arrive{from{opacity:.3;transform:translateY(6px) rotate(-12deg)}to{opacity:1;transform:translateY(0) rotate(-4deg)}}
+.roll-result .die{animation:dice-arrive .28s ease-out both}.roll-result .die:nth-child(2){animation-delay:.07s}
+body[data-combat-fx]{--fx-color:#77ded2}body[data-combat-fx=damage]{--fx-color:#ed977e}body[data-combat-fx=heal],body[data-combat-fx=rest]{--fx-color:#9fe3aa}body[data-combat-fx=critical]{--fx-color:#efd28c}body[data-combat-fx=miss]{--fx-color:#aeb7b0}body[data-combat-fx=guard]{--fx-color:#85bee8}
+body[data-combat-fx] #toast{border-color:var(--fx-color);box-shadow:0 0 20px color-mix(in srgb,var(--fx-color) 35%,transparent),0 18px 70px #0007}
+body[data-combat-fx] .status{position:relative}
+body[data-combat-fx] .status:after{content:"";position:absolute;inset:-3px;border:1px solid var(--fx-color);border-radius:14px;box-shadow:0 0 14px color-mix(in srgb,var(--fx-color) 28%,transparent);pointer-events:none;animation:combat-pulse .75s ease-out both}
+body[data-combat-fx=damage] .status button:first-child,body[data-combat-fx=heal] .status button:first-child,body.ki-spent-fx .status button:last-child{animation:counter-pulse .75s ease-out}
+body[data-combat-fx=turn] .economy{animation:counter-pulse .75s ease-out;border-radius:12px}
+@media(max-width:350px){.ki-dots .ki-charge{flex-basis:23px;width:23px}.ki-dots .ki-charge .icon{width:23px;height:23px}}
+/* Paused when hidden; a static aura remains under accessibility preferences. */
+body.fx-paused *:before,body.fx-paused *:after{animation-play-state:paused!important}
+body.reduce-motion .ki-charge:before,body.reduce-motion .item-tile.magical:after{animation:none!important;opacity:.4}
+body.reduce-motion .status:after{display:none}body.reduce-motion .roll-result .die{animation:none!important}
+@media(prefers-reduced-motion:reduce){.ki-dots .ki-charge:before,.item-tile.magical:after{animation:none!important;opacity:.4}body[data-combat-fx] .status:after{display:none}.roll-result .die{animation:none!important}}
+
+body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{animation:none!important;transition:none!important}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
