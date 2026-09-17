@@ -1,0 +1,220 @@
+{
+  "version": 1,
+  "fonds": [
+    {
+      "mode": "accueil",
+      "fichier": "assets/backgrounds/01-accueil.webp",
+      "dimensions": [
+        852,
+        1846
+      ]
+    },
+    {
+      "mode": "combat",
+      "fichier": "assets/backgrounds/02-combat.webp",
+      "dimensions": [
+        852,
+        1846
+      ]
+    },
+    {
+      "mode": "social",
+      "fichier": "assets/backgrounds/03-social.webp",
+      "dimensions": [
+        852,
+        1846
+      ]
+    },
+    {
+      "mode": "journal",
+      "fichier": "assets/backgrounds/04-journal.webp",
+      "dimensions": [
+        852,
+        1846
+      ]
+    }
+  ],
+  "icones": [
+    {
+      "nom": "baton",
+      "fichier": "assets/icons/baton.png",
+      "format": "PNG RGBA",
+      "dimensions": [
+        128,
+        128
+      ]
+    },
+    {
+      "nom": "brassards",
+      "fichier": "assets/icons/brassards.png",
+      "format": "PNG RGBA",
+      "dimensions": [
+        128,
+        128
+      ]
+    },
+    {
+      "nom": "calebasse",
+      "fichier": "assets/icons/calebasse.png",
+      "format": "PNG RGBA",
+      "dimensions": [
+        128,
+        128
+      ]
+    },
+    {
+      "nom": "carapace",
+      "fichier": "assets/icons/carapace.png",
+      "format": "PNG RGBA",
+      "dimensions": [
+        128,
+        128
+      ]
+    },
+    {
+      "nom": "ceinture",
+      "fichier": "assets/icons/ceinture.png",
+      "format": "PNG RGBA",
+      "dimensions": [
+        128,
+        128
+      ]
+    },
+    {
+      "nom": "chaussons",
+      "fichier": "assets/icons/chaussons.png",
+      "format": "PNG RGBA",
+      "dimensions": [
+        128,
+        128
+      ]
+    },
+    {
+      "nom": "deplacement",
+      "fichier": "assets/icons/deplacement.png",
+      "format": "PNG RGBA",
+      "dimensions": [
+        128,
+        128
+      ]
+    },
+    {
+      "nom": "flechettes",
+      "fichier": "assets/icons/flechettes.png",
+      "format": "PNG RGBA",
+      "dimensions": [
+        128,
+        128
+      ]
+    },
+    {
+      "nom": "griffes",
+      "fichier": "assets/icons/griffes.png",
+      "format": "PNG RGBA",
+      "dimensions": [
+        128,
+        128
+      ]
+    },
+    {
+      "nom": "inventaire",
+      "fichier": "assets/icons/inventaire.png",
+      "format": "PNG RGBA",
+      "dimensions": [
+        128,
+        128
+      ]
+    },
+    {
+      "nom": "jets",
+      "fichier": "assets/icons/jets.png",
+      "format": "PNG RGBA",
+      "dimensions": [
+        128,
+        128
+      ]
+    },
+    {
+      "nom": "journal",
+      "fichier": "assets/icons/journal.png",
+      "format": "PNG RGBA",
+      "dimensions": [
+        128,
+        128
+      ]
+    },
+    {
+      "nom": "ki",
+      "fichier": "assets/icons/ki.png",
+      "format": "PNG RGBA",
+      "dimensions": [
+        128,
+        128
+      ]
+    },
+    {
+      "nom": "main-ouverte",
+      "fichier": "assets/icons/main-ouverte.png",
+      "format": "PNG RGBA",
+      "dimensions": [
+        128,
+        128
+      ]
+    },
+    {
+      "nom": "meditation",
+      "fichier": "assets/icons/meditation.png",
+      "format": "PNG RGBA",
+      "dimensions": [
+        128,
+        128
+      ]
+    },
+    {
+      "nom": "poing",
+      "fichier": "assets/icons/poing.png",
+      "format": "PNG RGBA",
+      "dimensions": [
+        128,
+        128
+      ]
+    },
+    {
+      "nom": "reaction",
+      "fichier": "assets/icons/reaction.png",
+      "format": "PNG RGBA",
+      "dimensions": [
+        128,
+        128
+      ]
+    },
+    {
+      "nom": "repos",
+      "fichier": "assets/icons/repos.png",
+      "format": "PNG RGBA",
+      "dimensions": [
+        128,
+        128
+      ]
+    },
+    {
+      "nom": "social",
+      "fichier": "assets/icons/social.png",
+      "format": "PNG RGBA",
+      "dimensions": [
+        128,
+        128
+      ]
+    },
+    {
+      "nom": "vitalite",
+      "fichier": "assets/icons/vitalite.png",
+      "format": "PNG RGBA",
+      "dimensions": [
+        128,
+        128
+      ]
+    }
+  ],
+  "presentation": "Libellés, compteurs, halos et états ajoutés en HTML/CSS ; aucun emoji fonctionnel."
+}
